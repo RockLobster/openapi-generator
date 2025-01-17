@@ -2,11 +2,9 @@ package {{packageName}}.infrastructure
 
 import {{packageName}}.infrastructure.authentication.Base64Encoder
 import {{packageName}}.infrastructure.authentication.decodeBase64
-import io.ktor.utils.io.core.String
 import kotlinx.serialization.KSerializer
 import kotlinx.serialization.descriptors.PrimitiveKind
 import kotlinx.serialization.descriptors.PrimitiveSerialDescriptor
-import kotlinx.serialization.descriptors.SerialDescriptor
 import kotlinx.serialization.encoding.Decoder
 import kotlinx.serialization.encoding.Encoder
 
@@ -14,7 +12,7 @@ internal object ByteArrayBase64Serializer: KSerializer<ByteArray> {
     override val descriptor = PrimitiveSerialDescriptor("ByteArrayBase64Serializer", PrimitiveKind.STRING)
 
     override fun serialize(encoder: Encoder, value: ByteArray) {
-        val base64String = String(Base64Encoder.encode(value))
+        val base64String = Base64Encoder.encode(value).decodeToString()
         encoder.encodeString(base64String)
     }
 
