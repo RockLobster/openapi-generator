@@ -1,12 +1,11 @@
 package {{packageName}}.infrastructure.authentication
 
-import io.ktor.utils.io.core.String
 import io.ktor.utils.io.core.toByteArray
 import kotlin.experimental.and
 
-private val BASE64_ALPHABET: String = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/"
-private val BASE64_MASK: Byte = 0x3f
-private val BASE64_PAD: Char = '='
+private const val BASE64_ALPHABET: String = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/"
+private const val BASE64_MASK: Byte = 0x3f
+private const val BASE64_PAD: Char = '='
 private val BASE64_INVERSE_ALPHABET = IntArray(256) {
     BASE64_ALPHABET.indexOf(it.toChar())
 }
@@ -27,17 +26,17 @@ internal object Base64Encoder {
 
             for (i in 3 downTo padSize) {
                 val char = (chunk shr (6 * i)) and BASE64_MASK.toInt()
-                result.add(char.toBase64().toByte())
+                result.add(char.toBase64().code.toByte())
             }
             // Fill the pad with '='
-            repeat(padSize) { result.add(BASE64_PAD.toByte()) }
+            repeat(padSize) { result.add(BASE64_PAD.code.toByte()) }
         }
 
         return result.toByteArray()
     }
 }
 
-internal fun String.encodeBase64(): String = String(Base64Encoder.encode(this.toByteArray()))
+internal fun String.encodeBase64(): String = Base64Encoder.encode(this.toByteArray()).decodeToString()
 
 internal object Base64Decoder {
 
